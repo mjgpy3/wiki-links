@@ -1,0 +1,4 @@
+rabbit-management-ui:
+  image: rabbitmq:3-management
+  ports:
+    - "8080:15672"
