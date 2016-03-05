@@ -7,3 +7,5 @@ link-extractor:
   build: ./link-extractor
   volumes:
     - ./link-extractor:/home/dev
+  ports:
+    - "3000:3000"
