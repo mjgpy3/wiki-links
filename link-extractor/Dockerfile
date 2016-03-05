@@ -4,6 +4,7 @@ RUN cabal update && cabal install amqp tagsoup
 RUN cabal install scotty
 RUN cabal install aeson lens-aeson
 RUN cabal install cgi-3001.3.0.0
+RUN cabal install generic-deriving
 
 RUN mkdir -p /home/dev
 VOLUME /home/dev
