@@ -2,3 +2,8 @@ rabbit:
   image: rabbitmq:3-management
   ports:
     - "8080:15672"
+
+link-extractor:
+  build: ./link-extractor
+  volumes:
+    - .:/home/dev
