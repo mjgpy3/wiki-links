@@ -9,10 +9,3 @@ link-extractor:
     - ./link-extractor:/home/dev
   ports:
     - "3000:3000"
-
-ui:
-  build: ./ui
-  volumes:
-    - ./ui:/home/dev
-  ports:
-    - "3001:3001"
