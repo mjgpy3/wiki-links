@@ -36,9 +36,11 @@ connection = retry(
   lambda:
     pika.BlockingConnection(parameters)
 )
-channel = connection.channel()
+consume = connection.channel()
+consume.queue_declare(queue='linkExtracted', durable=True)
 
-channel.queue_declare(queue='linkExtracted', durable=True)
+produce = connection.channel()
+produce.queue_declare(queue='linkUnvisited', durable=True)
 
-for method_frame, properties, body in channel.consume('linkExtracted'):
-    channel.basic_ack(method_frame.delivery_tag)
+for method_frame, properties, body in consume.consume('linkExtracted'):
+    consume.basic_ack(method_frame.delivery_tag)
