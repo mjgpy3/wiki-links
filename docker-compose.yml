@@ -6,4 +6,4 @@ rabbit:
 link-extractor:
   build: ./link-extractor
   volumes:
-    - .:/home/dev
+    - ./link-extractor:/home/dev
