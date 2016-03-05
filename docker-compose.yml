@@ -9,3 +9,5 @@ link-extractor:
     - ./link-extractor:/home/dev
   ports:
     - "3000:3000"
+  links:
+    - rabbit
