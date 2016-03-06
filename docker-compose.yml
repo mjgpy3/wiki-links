@@ -18,3 +18,7 @@ link-visit-tracker:
     - ./link-visit-tracker:/home/dev
   links:
     - rabbit
+    - redis
+
+redis:
+  image: redis:2.8

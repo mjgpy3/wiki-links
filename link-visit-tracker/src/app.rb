@@ -1,13 +1,24 @@
 #!/usr/bin/env ruby
 
 require 'bunny'
-
-sleep 10
+require 'json'
+require 'redis'
 
 connection = Bunny.new(host: 'rabbit')
-puts 'Established connection'
 
-connection.start
+begin
+  connection.start
+rescue
+  retry
+end
+
+begin
+  redis = Redis.new(host: 'redis')
+rescue
+  retry
+end
+
+puts 'Established connection'
 
 channel = connection.create_channel
 inbound_queue = channel.queue('linkExtracted', durable: true)
@@ -21,7 +32,12 @@ outbound_queue.bind(exchange)
 inbound_queue.subscribe do |delivery_info, metadata, payload|
   puts "Received #{payload}"
 
-  outbound_queue.publish('', routing_key: 'links.unvisited')
+  json = JSON.parse(payload)
+
+  outbound_queue.publish(
+    'foobar',
+    routing_key: 'links.unvisited'
+  )
 end
 
 while true
