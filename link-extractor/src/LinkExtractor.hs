@@ -1,7 +1,12 @@
+#!/usr/bin/env runhaskell
+
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-import Control.Lens
+module Main where
+
+import Extraction
+
 import Data.Aeson.Lens
 import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BL
@@ -24,10 +29,15 @@ main :: IO ()
 main = scotty 3000 $ do
   post "/link" $ do
     payload <- jsonData
-    liftIO $ extractLinks $ url payload
+    let link = url payload
+    liftIO $ extractLinks link
     html "<h1>Success</h1>"
 
 extractLinks url = do
+    links <- parseLinks url
+    putStrLn "Printing"
+    print links
+    putStrLn "/Printing"
     conn <- openConnection "rabbit" "/" "guest" "guest"
     chan <- openChannel conn
 
