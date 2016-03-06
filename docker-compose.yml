@@ -16,3 +16,5 @@ link-visit-tracker:
   build: ./link-visit-tracker
   volumes:
     - ./link-visit-tracker:/home/dev
+  links:
+    - rabbit

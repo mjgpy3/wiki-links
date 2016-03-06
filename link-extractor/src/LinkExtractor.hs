@@ -38,7 +38,7 @@ foobar = do
     bindQueue chan "linkExtracted" "linkExchange" "link.*"
 
     publishMsg chan "linkExchange" "link.extracted"
-        (newMsg {msgBody = (BL.pack "Hi there"), 
+        (newMsg {msgBody = (BL.pack "Hi there"),
                  msgDeliveryMode = Just NonPersistent}
                 )
 
