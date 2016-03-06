@@ -34,10 +34,14 @@ inbound_queue.subscribe do |delivery_info, metadata, payload|
 
   json = JSON.parse(payload)
 
-  outbound_queue.publish(
-    'foobar',
-    routing_key: 'links.unvisited'
-  )
+  if !redis.sismember('visited_urls', json['url'])
+    outbound_queue.publish(
+      payload,
+      routing_key: 'links.unvisited'
+    )
+  end
+
+  redis.sadd('visited_urls', json['url'])
 end
 
 while true
