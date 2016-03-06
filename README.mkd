@@ -4,14 +4,14 @@ A breakable toy featuring Docker, RabbitMQ, Neo4j and others
 This is not meant to be an optimal (or even reasonable) piece of software. It's
 just meant to be an experiment. The current technologies it uses are
 
- - Docker
-   - Docker Compose
- - Haskell
+ - :whale: Docker
+   - :whale2: Docker Compose
+ - λ\= Haskell
    - Wreq
    - TagSoup
    - Lens
    - Aeson
- - Ruby
-   - Rabbit
- - RabbitMq
- - REDIS
+ - :gem: Ruby
+   - :rabbit2: Rabbit
+ - :rabbit: RabbitMq
+ - :red_car: REDIS
