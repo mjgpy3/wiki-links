@@ -10,6 +10,7 @@ import Extraction
 import Data.Aeson.Lens
 import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as BL
+import Data.Traversable
 import Data.Monoid (mconcat)
 import Data.Text (pack)
 import Generics.Deriving
@@ -17,13 +18,13 @@ import Network.AMQP
 import Network.CGI
 import Web.Scotty
 
-data CreateUrlPayload =
-  CreateUrlPayload { url :: String }
+data Payload =
+  UrlContainer { url :: String }
   deriving (Generic, Show)
 
-instance ToJSON CreateUrlPayload
+instance ToJSON Payload
 
-instance FromJSON CreateUrlPayload
+instance FromJSON Payload
 
 main :: IO ()
 main = scotty 3000 $ do
@@ -33,8 +34,8 @@ main = scotty 3000 $ do
     liftIO $ extractLinks link
     html "<h1>Success</h1>"
 
-extractLinks url = do
-    links <- parseLinks url
+extractLinks link = do
+    links <- parseLinks link
     putStrLn "Printing"
     print links
     putStrLn "/Printing"
@@ -46,9 +47,10 @@ extractLinks url = do
     declareExchange chan newExchange { exchangeName = "linkExchange", exchangeType = "topic" }
     bindQueue chan "linkExtracted" "linkExchange" "link.*"
 
-    publishMsg chan "linkExchange" "link.extracted"
-        (newMsg {msgBody = (BL.pack $ concat ["{ \"url\": \"", url, "\" }"]),
-                 msgDeliveryMode = Just NonPersistent}
-                )
+    for links $ \aLink ->
+      publishMsg chan "linkExchange" "link.extracted"
+          (newMsg {msgBody = (encode $ UrlContainer aLink),
+                   msgDeliveryMode = Just NonPersistent}
+                  )
 
     closeConnection conn
