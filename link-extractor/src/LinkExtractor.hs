@@ -24,11 +24,10 @@ main :: IO ()
 main = scotty 3000 $ do
   post "/link" $ do
     payload <- jsonData
-    liftIO $ putStrLn $ url payload
-    liftIO foobar
+    liftIO $ extractLinks $ url payload
     html "<h1>Success</h1>"
 
-foobar = do
+extractLinks url = do
     conn <- openConnection "rabbit" "/" "guest" "guest"
     chan <- openChannel conn
 
@@ -38,7 +37,7 @@ foobar = do
     bindQueue chan "linkExtracted" "linkExchange" "link.*"
 
     publishMsg chan "linkExchange" "link.extracted"
-        (newMsg {msgBody = (BL.pack "{ \"url\": \"http://www.google.com\" }"),
+        (newMsg {msgBody = (BL.pack $ concat ["{ \"url\": \"", url, "\" }"]),
                  msgDeliveryMode = Just NonPersistent}
                 )
 

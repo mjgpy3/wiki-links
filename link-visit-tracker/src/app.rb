@@ -9,12 +9,14 @@ connection = Bunny.new(host: 'rabbit')
 begin
   connection.start
 rescue
+  sleep 1.0
   retry
 end
 
 begin
   redis = Redis.new(host: 'redis')
 rescue
+  sleep 1.0
   retry
 end
 
