@@ -9,6 +9,10 @@ link-extractor:
     - ./link-extractor:/home/dev
   ports:
     - "3000:3000"
+  environment:
+    EXCHANGE: linkExchange
+    EXCHANGE_TYPE: topic
+    OUTBOUND_QUEUE: linkExtracted
   links:
     - rabbit
 
@@ -16,6 +20,12 @@ link-visit-tracker:
   build: ./link-visit-tracker
   volumes:
     - ./link-visit-tracker:/home/dev
+  environment:
+    EXCHANGE: linkExchange
+    EXCHANGE_TYPE: topic
+    INBOUND_QUEUE: linkExtracted
+    OUTBOUND_QUEUE: linkUnvisited
+    VISITED_SET_NAME: visited_urls
   links:
     - rabbit
     - redis
@@ -24,6 +34,8 @@ link-classifier:
   build: ./link-classifier
   volumes:
     - ./link-classifier:/home/dev
+  environment:
+    EXCHANGE: linkExchange
   links:
     - rabbit
 
