@@ -20,5 +20,12 @@ link-visit-tracker:
     - rabbit
     - redis
 
+link-classifier:
+  build: ./link-classifier
+  volumes:
+    - ./link-classifier:/home/dev
+  links:
+    - rabbit
+
 redis:
   image: redis:2.8
